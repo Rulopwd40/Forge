@@ -1,0 +1,60 @@
+basePath: /
+definitions:
+  models.User:
+    properties:
+      email:
+        type: string
+      level:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for user management in Forge
+  title: Forge API
+  version: "1.0"
+paths:
+  /swagger/index.json:
+    get:
+      consumes:
+      - application/json
+      description: Get Swagger JSON
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Swagger JSON
+      tags:
+      - Swagger
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint allows to register a new user.
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Registers a new user
+      tags:
+      - user
+swagger: "2.0"

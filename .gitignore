@@ -1,0 +1,34 @@
+# Angular specific
+node_modules/
+dist/
+tmp/
+temp/
+out-tsc/
+coverage/
+.angular/
+.angular-cache/
+.sass-cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+*.log
+*.tsbuildinfo
+
+# Go specific
+bin/
+pkg/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.log
+vendor/
+.DS_Store
+.idea/
+.vscode/
+*.iml

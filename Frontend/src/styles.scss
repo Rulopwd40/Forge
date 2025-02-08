@@ -1,12 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+$primary-color: #FFBC2D;
+$primary-color-dark: #FFA500;
+$primary-color-light: #ffc037;
+$background-color: #1E1E1E;
+
 body {
     font-family: 'Inter', sans-serif;
     color: #FFFFFF;
 }
 html, body {
-    background-color: #1E1E1E;
+    background-color: $background-color;
     height: 100%;
     margin: 0;
     padding: 0;
@@ -22,7 +27,7 @@ button{
     cursor: pointer;
 }
 .button-primary{
-    background-color: #FFBC2D;
+    background-color: $primary-color;
     color: #FFFFFF;
     border: none;
     padding: 10px;
@@ -31,7 +36,7 @@ button{
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 .button-primary:hover{
-    background-color: #FFA500;
+    background-color: $primary-color-light;
 }
 #root {
     height: 100%;
