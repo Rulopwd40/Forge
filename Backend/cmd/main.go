@@ -14,5 +14,6 @@ import (
 )
 
 func main() {
+	server.LoadEnvVariables()
 	server.Run()
 }

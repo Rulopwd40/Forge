@@ -1,5 +1,9 @@
+
 /* You can add global styles to this file, and also import other style files */
+
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 
 $primary-color: #FFBC2D;
 $primary-color-dark: #FFA500;
@@ -15,9 +19,12 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+   
 }
+
 button{
-    font-weight: 600;
+    font-weight: 400;
+    font-size: 14px;
     margin-top: 10px;
     padding: 10px;
     width: 100%;
@@ -41,3 +48,24 @@ button{
 #root {
     height: 100%;
 }
+
+input{
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #2E2E2E;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF;
+    height: 3.3vh;
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+        -webkit-text-fill-color: #FFFFFF;
+        -webkit-box-shadow: 0 0 0px 1000px #2E2E2E inset;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

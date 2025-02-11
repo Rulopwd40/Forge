@@ -38,30 +38,41 @@
         form{
             display: flex;
             flex-direction: column;
-            width: 300px;
-            
+            width: 400px;
 
-            input{
-                margin-bottom: 10px;
-                padding: 10px;
-                border: none;
-                background-color: #2E2E2E;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                color: #FFFFFF;
+            .password-container{
+                display:inline-block;
+                position:relative;
+                width: 100%;
+                overflow: hidden;
+                input{
+                    width: 100%;
+                    font-size: 16px;
+                }
 
-                &:-webkit-autofill,
-                &:-webkit-autofill:hover,
-                &:-webkit-autofill:focus {
-                    -webkit-text-fill-color: #FFFFFF;
-                    -webkit-box-shadow: 0 0 0px 1000px #2E2E2E inset;
-                    transition: background-color 5000s ease-in-out 0s;
+                .show-hide{
+                    position: absolute;
+                    background: transparent;
+                    top: 50%;
+                    right: 15px;
+                    transform: translateY(-80%);
+                    cursor: pointer;
+                    color: white;
+                    font-size: 12px;
+                    
                 }
             }
+
             label{
-                font-size: 12px;
+                font-size: 14px;
             }
 
-           
+           .validation-error{
+                color: red;
+                font-size: 12px;
+                margin-bottom: 5px;
+            
+           }
         }
 
         .slide{
@@ -71,11 +82,12 @@
             justify-content: center;
             margin: 0;
             width: 100%;
-            height: 3vh;
+            height: 4vh;
             border-radius: 25px;
             overflow: hidden; 
             margin-bottom: 15px;
             cursor: pointer;
+
             .login, .register {
                 display: flex;
                 flex: 1;
@@ -84,6 +96,11 @@
                 height: 100%;
                 user-select: none;
                 border-radius: inherit; 
+                
+                h5{
+                    font-size: 12px;
+                    font-weight: 400;
+                }
             }
 
             .active {
@@ -91,6 +108,7 @@
                 transition: background-color 0.3s ease, transform 0.3s ease;
             }
            
+       
         }
         .submit-button{
             margin-top: 30px;
@@ -105,12 +123,12 @@
             align-items: center;
             width: 100%;
             h5{
-                font-weight: 1000;
+                font-weight: 700;
                 margin-top: 10px;
                 margin-bottom: 0;
             }
            
-            
+
             .google-button{
                 background-color: transparent ;
                 border:#4285F4 solid 1px;

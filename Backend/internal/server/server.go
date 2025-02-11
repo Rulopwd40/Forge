@@ -8,6 +8,8 @@ import (
 	"forge/internal/repository"
 	"forge/internal/service"
 
+	"os"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -28,8 +30,8 @@ func Run() {
 		db: database.ConnectDB(),
 	}
 
-	userHandler := handler.NewUserHandler(service.NewUserService(repository.NewUserRepository(server.db)))
-	SetupUserRoutes(r, userHandler)
+	Initialize(r, server)
+
 	// Inicia el servidor en el puerto 8080
 	if err := r.Run(":8080"); err != nil {
 		panic(err)
@@ -39,7 +41,11 @@ func Run() {
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		allowOrigin := os.Getenv("ALLOW_ORIGIN")
+		if allowOrigin == "" {
+			allowOrigin = "*"
+		}
+		c.Writer.Header().Set("Access-Control-Allow-Origin", allowOrigin)
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
@@ -53,9 +59,28 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
-func SetupUserRoutes(r *gin.Engine, userHandler *handler.UserHandler) {
+func Initialize(r *gin.Engine, server *Server) {
 
-	print(userHandler)
+	//Repository
+	userRepository := repository.NewUserRepository(server.db)
+
+	//Service
+	passwordService := service.NewPasswordService()
+	userService := service.NewUserService(userRepository, passwordService)
+	authService := service.NewAuthService(userService, passwordService)
+
+	//Handler
+	userHandler := handler.NewUserHandler(userService)
+	SetupUserRoutes(r, userHandler)
+
+	authHandler := handler.NewAuthHandler(authService)
+	SetupAuthRoutes(r, authHandler)
+}
+
+func SetupUserRoutes(r *gin.Engine, userHandler handler.IUserHandler) {
 	r.POST("/user/register", userHandler.RegisterUser)
-	r.GET("/user", handler.GetUsers)
+}
+
+func SetupAuthRoutes(r *gin.Engine, authHandler handler.IAuthHandler) {
+	r.POST("/login", authHandler.Login)
 }

@@ -3,6 +3,8 @@ package database
 import (
 	"log"
 
+	"forge/internal/models"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -13,5 +15,9 @@ func ConnectDB() *gorm.DB {
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
+
+	// Set the directory for migrations
+	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.User{}, &models.Trainee{}, &models.Instructor{})
+
 	return db
 }
