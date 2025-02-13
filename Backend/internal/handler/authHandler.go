@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	_ "os"
+	"os"
 
 	"forge/internal/models"
 	"forge/internal/service"
@@ -12,6 +12,7 @@ import (
 
 type IAuthHandler interface {
 	Login(c *gin.Context)
+	Profile(c *gin.Context)
 }
 
 type AuthHandler struct {
@@ -22,16 +23,16 @@ func NewAuthHandler(authService service.IAuthService) IAuthHandler {
 	return &AuthHandler{authService}
 }
 
-// @Summary Login
-// @Description Logs in a user
+// Login godoc
+// @Summary Login user
+// @Description Authenticate user and return JWT token
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param username body string true "Username"
-// @Param password body string true "Password"
-// @Success 200 {string} string "Logged in"
-// @Failure 400 {string} string "Bad request"
-// @Failure 401 {string} string "Unauthorized"
+// @Param loginData body models.LoginRequest true "Login data"
+// @Success 200 {object} models.TokenResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
 // @Router /login [post]
 func (a AuthHandler) Login(c *gin.Context) {
 	var loginData models.LoginRequest
@@ -44,5 +45,33 @@ func (a AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+
+	domain := os.Getenv("COOKIE_DOMAIN")
+
+	c.SetCookie("jwt", tokenString, 3600, "/", domain, true, true)
+	c.JSON(http.StatusOK, gin.H{"message": "Successful"})
+}
+
+// Profile handles the request to retrieve the profile information of the authenticated user.
+// @Summary Retrieve user profile
+// @Description Get the profile information of the authenticated user
+// @Tags profile
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{} "Authorized"
+// @Failure 401 {object} map[string]interface{} "Unauthorized"
+// @Router /profile [get]
+func (a AuthHandler) Profile(c *gin.Context) {
+	// Extraer el username desde el contexto
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	// Devolver los datos del usuario (esto puede venir de una BD en un caso real)
+	c.JSON(http.StatusOK, gin.H{
+		"username": username,
+		"message":  "Authorized",
+	})
 }

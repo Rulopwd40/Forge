@@ -1,3 +1,7 @@
+$primary-color: #FFBC2D;
+$primary-color-dark: #FFA500;
+$primary-color-light: #ffc037;
+$background-color: #1E1E1E;
 .login-container{
     
     display: flex;
@@ -98,15 +102,20 @@
                 border-radius: inherit; 
                 
                 h5{
-                    font-size: 12px;
+                    font-size: 14px;
                     font-weight: 400;
                 }
             }
 
             .active {
-                background-color: #FFBC2D;
+                color: $background-color;
+                background-color: $primary-color;
                 transition: background-color 0.3s ease, transform 0.3s ease;
             }
+            .active:hover{
+                background-color: $primary-color-light;
+            }
+
            
        
         }
@@ -128,7 +137,6 @@
                 margin-bottom: 0;
             }
            
-
             .google-button{
                 background-color: transparent ;
                 border:#4285F4 solid 1px;

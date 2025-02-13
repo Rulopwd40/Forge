@@ -5,8 +5,10 @@ package server
 import (
 	"forge/internal/database"
 	"forge/internal/handler"
+	"forge/internal/middlewares"
 	"forge/internal/repository"
 	"forge/internal/service"
+	"log"
 
 	"os"
 
@@ -21,22 +23,31 @@ type Server struct {
 }
 
 func Run() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Si no se define un puerto, usar 8080 por defecto
+	}
+
 	r := gin.Default()
 
+	// Configuración de Swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Middleware CORS
 	r.Use(CORSMiddleware())
 
+	// Conectar a la base de datos
 	server := &Server{
 		db: database.ConnectDB(),
 	}
 
+	// Inicializar servicios
 	Initialize(r, server)
 
-	// Inicia el servidor en el puerto 8080
-	if err := r.Run(":8080"); err != nil {
-		panic(err)
+	// Inicia el servidor en el puerto especificado
+	if err := r.Run(":" + port); err != nil {
+		log.Fatal("Server failed to start: ", err)
 	}
-
 }
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -75,6 +86,7 @@ func Initialize(r *gin.Engine, server *Server) {
 
 	authHandler := handler.NewAuthHandler(authService)
 	SetupAuthRoutes(r, authHandler)
+
 }
 
 func SetupUserRoutes(r *gin.Engine, userHandler handler.IUserHandler) {
@@ -83,4 +95,10 @@ func SetupUserRoutes(r *gin.Engine, userHandler handler.IUserHandler) {
 
 func SetupAuthRoutes(r *gin.Engine, authHandler handler.IAuthHandler) {
 	r.POST("/login", authHandler.Login)
+	protected := r.Group("/")
+	protected.Use(middlewares.AuthMiddleware())
+	{
+		protected.GET("/profile", authHandler.Profile)
+	}
+
 }

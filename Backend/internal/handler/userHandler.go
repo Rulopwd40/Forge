@@ -30,7 +30,9 @@ func NewUserHandler(userService service.IUserService) IUserHandler {
 // @Accept  json
 // @Produce  json
 // @Param user body models.User true "User data"
-// @Success 200 {object} models.User
+// @Success 200 {object} models.UserResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 409 {object} models.ErrorResponse
 // @Router /user/register [post]
 func (h *UserHandler) RegisterUser(c *gin.Context) {
 	var userStruct models.User

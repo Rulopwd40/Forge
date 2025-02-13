@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class HomeComponent {
       'confirm-password': false 
     }
 
-  constructor(private userService: UserService, private router:Router, private snackBar: MatSnackBar) {
+  constructor(private userService: UserService, private authService: AuthService, private router:Router, private snackBar: MatSnackBar) {
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -56,10 +57,27 @@ export class HomeComponent {
   }
 
   loginUser(event : any) {
-    console.log(this.loginForm.value);
+    if(!this.loginForm.valid) {
+      this.snackBar.open('Invalid form', 'Close', { duration: 3000 });
+      throw new Error('Invalid form');
+    }
+    const credentials = {
+      username: this.loginForm.value.username,
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
     }
 
-  async registerUser(event : any) {
+    this.authService.login(credentials).subscribe({
+      next:(response) => {
+        this.snackBar.open("Authenticated correctly", 'Close', {duration: 3000})
+      },
+      error: (error) => {
+        this.snackBar.open("Unauthorized", 'Close', {duration: 3000})
+      }
+    })
+  }
+
+  registerUser(event : any) {
     if(this.registerForm.value.password !== this.registerForm.value.confirm) {
       this.snackBar.open('Passwords do not match', 'Close', { duration: 3000 });
       throw new Error('Passwords do not match');
@@ -78,7 +96,9 @@ export class HomeComponent {
     this.userService.registerUser(newUser).subscribe({
       next: (response) => {
         this.snackBar.open('User registered successfully', 'Close', { duration: 3000 });
-        this.router.navigate([this.router.url]);
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
       },
       error: (error) => {
         this.snackBar.open(`Error registering user: ${error.message}`, 'Close', { duration: 3000 });
