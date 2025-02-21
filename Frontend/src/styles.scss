@@ -9,6 +9,7 @@ $primary-color: #FFBC2D;
 $primary-color-dark: #FFA500;
 $primary-color-light: #ffc037;
 $background-color: #1E1E1E;
+$background-color-secondary: #2E2E2E;
 
 body {
     font-family: 'Inter', sans-serif;
@@ -70,3 +71,18 @@ input{
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.background-primary{
+    background-color: $background-color;
+}
+
+.background-secondary{
+    background-color: $background-color-secondary;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.circle{
+    border-radius: 50%;
+}

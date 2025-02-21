@@ -91,6 +91,8 @@ func Initialize(r *gin.Engine, server *Server) {
 
 func SetupUserRoutes(r *gin.Engine, userHandler handler.IUserHandler) {
 	r.POST("/user/register", userHandler.RegisterUser)
+	r.GET("/user", userHandler.GetUserData)
+
 }
 
 func SetupAuthRoutes(r *gin.Engine, authHandler handler.IAuthHandler) {
@@ -99,6 +101,7 @@ func SetupAuthRoutes(r *gin.Engine, authHandler handler.IAuthHandler) {
 	protected.Use(middlewares.AuthMiddleware())
 	{
 		protected.GET("/profile", authHandler.Profile)
+		protected.POST("/logout", authHandler.Logout)
 	}
 
 }

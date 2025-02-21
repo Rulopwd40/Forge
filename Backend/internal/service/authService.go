@@ -37,8 +37,8 @@ func (a AuthService) Login(loginData models.LoginRequest) (string, error) {
 
 	// Create JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": user.Username,
-		"exp":     time.Now().Add(time.Hour * 72).Unix(),
+		"username": user.Username,
+		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 	})
 
 	// Sign the token with the secret

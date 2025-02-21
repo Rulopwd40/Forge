@@ -1,5 +1,14 @@
-<nav></nav>
+
+@if (loginStatus) {
+  <nav>
+    <h3>Forge</h3>
+  </nav>
+}
 <body>  
   <router-outlet></router-outlet>
 </body>
-<footer></footer>
+@if(loginStatus){
+  <footer>
+
+  </footer>
+}

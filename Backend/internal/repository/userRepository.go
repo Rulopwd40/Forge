@@ -28,13 +28,13 @@ func (r *UserRepository) CreateUser(user *models.User) error {
 	return r.db.Create(user).Error
 }
 
-//Get
-
+// Get
 func (r *UserRepository) GetUsers() ([]models.User, error) {
 	var users []models.User
 	err := r.db.Find(&users).Error
 	return users, err
 }
+
 func (r *UserRepository) GetUserByEmail(email string) (models.User, any) {
 	var user models.User
 	err := r.db.Where("email = ?", email).First(&user).Error

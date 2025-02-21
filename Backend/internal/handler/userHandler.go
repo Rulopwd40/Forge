@@ -11,6 +11,7 @@ import (
 
 type IUserHandler interface {
 	RegisterUser(c *gin.Context)
+	GetUserData(c *gin.Context)
 }
 
 type UserHandler struct {
@@ -38,9 +39,7 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 	var userStruct models.User
 
 	if err := c.ShouldBindJSON(&userStruct); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to bind JSON",
-		})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Failed to bind JSON"})
 		return
 	}
 
@@ -48,13 +47,9 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 
 	if err != nil {
 		if err.Error() == "record not found" {
-			c.JSON(http.StatusConflict, gin.H{
-				"error": "User/email already exists",
-			})
+			c.JSON(http.StatusConflict, models.ErrorResponse{Error: "User/email already exists"})
 		} else {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "Bad request",
-			})
+			c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Bad request"})
 		}
 		return
 	}
@@ -63,4 +58,38 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 		"message": "User registered successfully",
 		"user":    userStruct,
 	})
+}
+
+// GetUserData godoc
+// @Summary Get user data
+// @Description Retrieves user data based on the provided username
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param username query string true "Username"
+// @Success 200 {object} models.UserResponse "User data retrieved successfully"
+// @Failure 400 {object} models.ErrorResponse "Username is required"
+// @Failure 404 {object} models.ErrorResponse "User not found"
+// @Router /user [get]
+func (h *UserHandler) GetUserData(c *gin.Context) {
+	username := c.Query("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Username is required"})
+		return
+	}
+
+	user, err := h.UserService.GetUserData(username)
+	if err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "User not found"})
+		return
+	}
+
+	userResponse := models.UserResponse{
+		Username: user.Username,
+		Email:    user.Email,
+		Level:    user.Level,
+		Name:     user.Name,
+		Message:  "User retrieved successfully",
+	}
+	c.JSON(http.StatusOK, userResponse)
 }

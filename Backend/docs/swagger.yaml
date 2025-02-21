@@ -38,10 +38,16 @@ definitions:
     type: object
   models.UserResponse:
     properties:
+      email:
+        type: string
+      level:
+        type: integer
       message:
         type: string
-      user:
-        $ref: '#/definitions/models.User'
+      name:
+        type: string
+      username:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -80,6 +86,19 @@ paths:
       summary: Login user
       tags:
       - auth
+  /logout:
+    post:
+      description: Clear the JWT cookie
+      responses:
+        "200":
+          description: message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Logout user
+      tags:
+      - auth
   /profile:
     get:
       consumes:
@@ -101,6 +120,35 @@ paths:
       summary: Retrieve user profile
       tags:
       - profile
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves user data based on the provided username
+      parameters:
+      - description: Username
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data retrieved successfully
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Username is required
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get user data
+      tags:
+      - user
   /user/register:
     post:
       consumes:

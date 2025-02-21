@@ -15,5 +15,8 @@ export class UserService {
     return this.http.post(`${API_URL}/user/register`, user);
   }
 
+  getUserData(username: string): Observable<any>{
+    return this.http.get(`${API_URL}/user?username=${username}`)
+  }
 
 }

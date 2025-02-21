@@ -19,6 +19,10 @@ export class AuthService {
   }
 
   login(credentials: { username: string,email: string; password: string }) {
-    return this.http.post(`${API_URL}/login`,credentials);
+    return this.http.post(`${API_URL}/login`,credentials, {withCredentials: true});
+  }
+
+  getProfile(): Observable<any> {
+    return this.http.get(`${API_URL}/profile`, { withCredentials: true });
   }
 }

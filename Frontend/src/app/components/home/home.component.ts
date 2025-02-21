@@ -19,8 +19,6 @@ import { AuthService } from '../../services/auth.service';
 
 
 export class HomeComponent {
-
-
  
   loginForm: FormGroup;
   registerForm: FormGroup<any>;
@@ -33,6 +31,10 @@ export class HomeComponent {
     }
 
   constructor(private userService: UserService, private authService: AuthService, private router:Router, private snackBar: MatSnackBar) {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['menu']);
+    }
+    
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -70,6 +72,7 @@ export class HomeComponent {
     this.authService.login(credentials).subscribe({
       next:(response) => {
         this.snackBar.open("Authenticated correctly", 'Close', {duration: 3000})
+        this.router.navigate(['menu']);
       },
       error: (error) => {
         this.snackBar.open("Unauthorized", 'Close', {duration: 3000})

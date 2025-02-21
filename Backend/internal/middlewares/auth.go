@@ -18,7 +18,7 @@ type Claims struct {
 // Middleware para verificar el JWT en la cookie
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString, err := c.Cookie("token")
+		tokenString, err := c.Cookie("jwt")
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()

@@ -1,0 +1,24 @@
+body{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: center;
+}
+
+.profile-card{
+    display: flex;
+    padding: 5px;
+    gap: 2.5vh;
+    border-radius: 7.5px;
+
+    .profile-photo{
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 1px 5px rgba($color: #000000, $alpha: .3);
+    }
+
+}
+

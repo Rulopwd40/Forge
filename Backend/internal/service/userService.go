@@ -9,6 +9,7 @@ import (
 type IUserService interface {
 	RegisterUser(userStruct models.User) error
 	GetUser(username string, email string) (models.User, any)
+	GetUserData(username string) (models.User, error)
 }
 
 type UserService struct {
@@ -44,4 +45,22 @@ func (u UserService) GetUser(username string, email string) (models.User, any) {
 		return u.UserRepository.GetUserByEmail(email)
 	}
 	return models.User{}, errors.New("no username or email provided")
+}
+
+func (u UserService) GetUserData(username string) (models.User, error) {
+	if username != "" {
+		user, err := u.UserRepository.GetUserByUsername(username)
+
+		if err != nil {
+			return models.User{}, errors.New("record not found")
+		}
+
+		return models.User{
+			Username: user.Username,
+			Name:     user.Name,
+			Level:    user.Level,
+			Email:    user.Email,
+		}, nil
+	}
+	return models.User{}, errors.New("no username provided")
 }
